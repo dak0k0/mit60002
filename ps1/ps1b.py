@@ -23,7 +23,21 @@ def dp_make_weight(egg_weights, target_weight, memo = {}):
     Returns: int, smallest number of eggs needed to make target weight
     """
     # TODO: Your code here
-    pass
+
+    if target_weight in memo.keys():                                            # first, check if the target weight is in the memo or not
+        result = memo[target_weight]                                            # if it is, pull result from the memo
+    elif target_weight == 0:                                                    # base case: 0 eggs needed for 0 lbs
+        result = 0
+    else:                                                                       # all other cases
+        new_targets = []                                                        # initialize a list for potential new targets based on egg weights
+        for weight in egg_weights:                                              # iterate through all egg weights, testing against target weight
+            if target_weight - weight >= 0:                                     # if the weight is <= target weight, add the potential new target to the list
+                new_targets.append(target_weight - weight)
+            result = dp_make_weight(egg_weights, min(new_targets), memo) + 1    # recurse on whichever new target weight is smallest and add 1 to
+                                                                                # the total number eggs, indicating an egg having been put towards the final weight
+        memo[target_weight] = result                                            # assign the new result to the memo for future use
+    
+    return result
 
 # EXAMPLE TESTING CODE, feel free to add more if you'd like
 if __name__ == '__main__':
